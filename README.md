@@ -41,7 +41,14 @@ If Glass shows **"TV updated: run repair"**: Easy installs turn Glass off and on
 The phone remote listens on the TV's Wi-Fi address only, refuses anything outside your home subnet, pairs each phone once with a 6-digit PIN shown on the TV (5 wrong PINs lock pairing for 5 minutes), and refuses DNS-rebinding and cross-site requests. App installs from a link need https and your confirmation on the TV. See `setup/security-test.sh`.
 
 ## Build
-JDK 17 and the Android SDK (platform 34). `glass/build-release.sh` builds a signed `Glass.apk`; the keystore is never part of this repo. `setup/make-release.py` builds the setup zips from `setup/src`.
+Needs JDK 17 and the Android SDK (platform 34).
+
+```bash
+cd glass
+./gradlew assembleRelease
+```
+
+That gives an unsigned APK in `glass/app/build/outputs/apk/release/`. Sign it with your own key before installing it. A build signed with your key can't install over the official Glass until the official one is removed. `glass/build-release.sh` is the maintainer's script and needs the maintainer's key. `python3 setup/make-release.py` builds the setup zips from `setup/src`.
 
 ## Licenses
 Glass TV is MIT licensed (`LICENSE`). The safe Home-switch approach and the ad/tracking package lists come from [CleanYourTV](https://github.com/Gathin23/cleanyourtv) (MIT, Copyright (c) 2026 Gathin). The Inter typeface is under the SIL Open Font License 1.1 (`FONT-LICENSE-OFL-Inter.txt`).
