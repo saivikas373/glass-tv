@@ -54,3 +54,8 @@ That gives an unsigned APK in `glass/app/build/outputs/apk/release/`. Sign it wi
 Glass TV is MIT licensed (`LICENSE`). The safe Home-switch approach and the ad/tracking package lists come from [CleanYourTV](https://github.com/Gathin23/cleanyourtv) (MIT, Copyright (c) 2026 Gathin). The Inter typeface is under the SIL Open Font License 1.1 (`FONT-LICENSE-OFL-Inter.txt`).
 
 Not affiliated with Google, Apple or any TV maker.
+
+## Two things that surprise people
+
+- **Finding Glass:** in Accessibility, Glass is at the very bottom of the Services list. Keep pressing Down.
+- **The scary warning:** Android shows "Glass can collect all of the text you type" for every accessibility app. Glass uses this only to catch the Home and settings buttons and to type what you send from your phone. It has no account and sends nothing to the internet except the weather you ask for.
