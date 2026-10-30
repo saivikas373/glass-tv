@@ -37,9 +37,10 @@ function Restore-UserKey {
   Remove-Item -LiteralPath $KEY, "$KEY.pub" -Force -ErrorAction SilentlyContinue
   if (Test-Path -LiteralPath $KEYBAK) { Move-Item -LiteralPath $KEYBAK $KEY; if (Test-Path -LiteralPath "$KEYBAK.pub") { Move-Item -LiteralPath "$KEYBAK.pub" "$KEY.pub" } }
 }
-function Adb { param([Parameter(ValueFromRemainingArguments = $true)][string[]]$A) $o = & $ADB @A 2>&1 | Out-String; return $o.Replace("`r", "") }
-function A   { param([Parameter(ValueFromRemainingArguments = $true)][string[]]$A) return (Adb (@('-s', $script:SERIAL) + $A)) }
-function Sh  { param([Parameter(ValueFromRemainingArguments = $true)][string[]]$A) return (A (@('shell') + $A)).Trim() }
+# Plain functions on purpose: with a param() block PowerShell would swallow adb's own -a, -d and -e
+function Adb { $o = & $ADB @args 2>&1 | Out-String; return $o.Replace("`r", "") }
+function A   { return (Adb -s $script:SERIAL @args) }
+function Sh  { return (A shell @args).Trim() }
 function Close-AdbServer { if (Test-Path -LiteralPath $ADB) { & $ADB kill-server 2>&1 | Out-Null } }
 
 function Get-Adb {
