@@ -1,0 +1,84 @@
+# Glass TV: conservative ad and tracking list (built from CleanYourTV's lists, MIT License, Copyright (c) 2026 Gathin)
+# Only packages that CleanYourTV's device lists mark as ads, tracking or promo on several TVs, plus a short
+# section per brand. Glass-Setup switches each one off ONLY if it is installed, with
+#   pm disable-user --user 0 <package>      (never uninstalled; Glass-Restore turns them back on)
+# Never on this list: Settings, setup, System UI, Play Services, Play Store, TV inputs/HDMI/Live TV,
+# keyboard, Bluetooth/remote, audio, firmware updates, the stock launcher, voice search, streaming apps.
+# "# quiet" = the TV's own system service turns it back on, so Glass won't show a repair banner for it.
+
+[all]
+com.google.android.feedback                    # Google feedback and crash-report uploader
+com.google.android.tv.bugreportsender          # automatic bug report upload
+com.android.tv.feedbackconsent                 # feedback consent collector
+com.google.android.tvrecommendations           # sponsored recommendation rows on the stock home
+android.autoinstalls.config.google.gtvpai      # silently auto-installs partner apps
+com.android.adservices.api                     # Privacy Sandbox ad services
+com.android.ondevicepersonalization.services   # on-device ad personalisation
+com.android.federatedcompute.services          # federated learning for ad and usage models
+fusion.android.tv.demo                         # retail store demo loop
+tv.samba.ssm                                   # Samba TV: recognises what is on screen for ad targeting (ACR)
+tv.samba.ssm.ui                                # quiet. Samba TV front end; some TVs turn it back on by themselves
+tv.anoki.acr.anokiacroptin                     # automatic content recognition (reports what is on screen)
+tv.alphonso.alphonso_eula                      # Alphonso ad tracking
+
+[tcl]
+com.tcl.tv.plus                                # TCL TV+ promoted content
+com.tcl.channelplus                            # TCL Live: free channels with ads
+com.tcl.tv.tclhome_passive                     # pushes TCL promo content to the home screen at boot
+com.tcl.partnercustomizer                      # TCL promo rows in the stock home
+com.tcl.interactive                            # TIAS interactive-ads background service
+com.tcl.smartlink.core                         # bundles a silent app installer
+com.tcl.exhibit                                # retail store demo
+com.tcl.esticker                               # retail demo stickers
+com.tcl.logkit                                 # log capture and upload
+com.tcl.bi                                     # TCL BI analytics
+com.tcl.bootadservice                          # full-screen ad before Home at boot
+com.tcl.overseasappshow                        # promotes preloaded apps
+com.tcl.profilemanager                         # audience / profile reporting
+android.autoinstalls.config.tcl.device         # partner-app auto installer
+
+[hisense]
+com.hisense.storemode                          # retail store demo mode
+com.hisense.demonstrate                        # demo reels
+com.hisense.evservice                          # ACR viewing-data collector
+com.vt.tv.evservice                            # viewing-data (ACR) service
+com.hisense.app.logreport                      # log reporter
+com.hisense.platformreport                     # usage/telemetry reporting
+com.hisense.logupload                          # log uploader
+com.hisense.business.ad                        # ad SDK
+com.hisense.service.ad                         # ad service
+android.autoinstalls.config.hisense.xiaoyushan # silent partner-app auto-installs
+
+[sony bravia]
+com.sony.dtv.promos                            # My BRAVIA promos
+com.sony.dtv.sonyselect                        # Sony Select promo tile
+com.sony.dtv.demosupport                       # retail demo support
+com.sony.dtv.demosystemsupport                 # retail demo system support
+com.sony.dtv.multiscreendemo                   # retail multi-screen demo
+com.sony.dtv.demomode                          # shop demo mode
+com.qterics.da.product                         # Qterics device-agent telemetry
+com.sonyericsson.idd.agent                     # Sony usage data / telemetry
+com.sony.dtv.sonybugreportsys                  # Sony bug report uploader
+com.sony.dtv.duid.generator                    # tracking ID generator
+android.autoinstalls.config.sony.bravia        # Play auto-install of partner apps
+
+[philips tpv]
+org.droidtv.candeebug                          # "DAC" analytics uploader
+org.droidtv.gel                                # metrics collector
+org.droidtv.usagelogger                        # usage and key-press telemetry
+org.droidtv.demome                             # "Demo me" retail demo mode
+org.droidtv.nettvrecommender                   # "Top Picks" promo row
+android.autoinstalls.config.tpv.device         # Play auto-install of partner apps
+
+[xiaomi redmi]
+com.miui.tv.analytics                          # Mi analytics: reads logs and app usage
+com.miui.analytics                             # OneTrack analytics
+com.xiaomi.statistic                           # usage stats uploader
+com.xm.webcontent                              # promo web content
+com.mitv.tvhome.mitvplus                       # Mi TV+ sponsored channels
+com.xiaomi.floatingframe                       # floating promo overlay
+com.xiaomi.mitv.tvpush.tvpushservice           # push ads and notifications
+android.autoinstalls.config.xiaomi.amelie      # silent preload installer
+android.autoinstalls.config.xiaomi.mibox3      # Play auto-install of partner apps
+android.autoinstalls.config.xioami.mibox3      # Play auto-install of partner apps (misspelt by Xiaomi)
+android.autoinstalls.config.xioami.dangal      # Play auto-install of partner apps (misspelt by Xiaomi)

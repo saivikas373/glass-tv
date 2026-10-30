@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#0A1222">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="/manifest.webmanifest">
+<title>Glass TV</title><meta name="apple-mobile-web-app-title" content="Glass TV">
+<style>
+:root{--bg:#0A1222;--accent:#7CC4FF;--ink:#0A1222;--glass:rgba(255,255,255,.12);--glass2:rgba(255,255,255,.07);--line:rgba(255,255,255,.2);--hi:rgba(255,255,255,.25);--muted:rgba(255,255,255,.78);--dim:rgba(255,255,255,.55)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:#fff;font:400 16px/1.3 -apple-system,BlinkMacSystemFont,"Inter","Segoe UI",Roboto,sans-serif;overscroll-behavior:none}
+body{background:linear-gradient(180deg,#070E1F 0%,#0E1838 45%,#1B2548 78%,#0A1226 100%) fixed}
+svg.sky{position:fixed;left:0;right:0;bottom:0;width:100%;height:46vh;z-index:0;pointer-events:none;opacity:.9;stroke:none}
+main{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top)) 16px calc(110px + env(safe-area-inset-bottom))}
+h1{font-size:28px;font-weight:700;margin:6px 0 2px;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:15px;display:flex;align-items:center;gap:8px}
+.dot{width:9px;height:9px;border-radius:50%;background:#4ADE80;box-shadow:0 0 8px #4ADE80}
+.dot.off{background:#F59E0B;box-shadow:0 0 8px #F59E0B}
+.eyebrow{color:var(--accent);font-size:12.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 12px}
+.glass{background:var(--glass);border:1px solid var(--line);box-shadow:inset 0 1px 0 var(--hi),0 10px 30px rgba(0,0,0,.25);backdrop-filter:blur(24px) saturate(140%);-webkit-backdrop-filter:blur(24px) saturate(140%)}
+.card{border-radius:28px;padding:20px;margin-top:14px}
+.head{display:flex;justify-content:space-between;align-items:flex-start}
+.round{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);background:var(--glass);box-shadow:inset 0 1px 0 var(--hi);color:#fff}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-action:manipulation}
+button:active{transform:scale(.96)}
+svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.field{display:flex;align-items:center;gap:12px;border-radius:22px;padding:0 18px;height:58px}
+.field input,.field textarea,input.plain,textarea.plain{flex:1;min-width:0;background:none;border:0;outline:0;color:#fff;font:inherit;font-size:17px}
+input::placeholder,textarea::placeholder{color:var(--dim)}
+/* remote */
+.dpad{position:relative;width:min(78vw,300px);aspect-ratio:1;margin:26px auto 10px;border-radius:50%;background:radial-gradient(circle at 50% 35%,rgba(255,255,255,.16),rgba(255,255,255,.07));border:1px solid var(--line);box-shadow:inset 0 1px 0 var(--hi),0 20px 40px rgba(0,0,0,.35)}
+.dpad button{position:absolute;display:grid;place-items:center;color:#fff}
+.dpad .u{top:4%;left:35%;width:30%;height:26%}.dpad .d{bottom:4%;left:35%;width:30%;height:26%}
+.dpad .l{left:4%;top:35%;width:26%;height:30%}.dpad .r{right:4%;top:35%;width:26%;height:30%}
+.dpad .ok{left:30%;top:30%;width:40%;height:40%;border-radius:50%;background:rgba(255,255,255,.14);border:1px solid var(--line);box-shadow:inset 0 1px 0 var(--hi);font-size:22px;font-weight:700}
+.trio{display:flex;justify-content:space-around;margin-top:18px}
+.trio div{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--muted);font-size:14px}
+.vol{display:flex;align-items:center;gap:16px;margin-top:22px}
+.volbar{flex:1;height:64px;border-radius:32px;display:flex;align-items:center;justify-content:space-between;padding:0 8px}
+.volbar button{width:56px;height:56px;border-radius:50%;display:grid;place-items:center}
+.volbar .mid{background:rgba(255,255,255,.1)}
+.mic{display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--muted);font-size:13px}
+.mic button{width:64px;height:64px;border-radius:50%;background:var(--accent);color:var(--ink);display:grid;place-items:center;box-shadow:0 8px 24px rgba(124,196,255,.35)}
+.mic button.live{animation:pulse 1s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 12px rgba(124,196,255,.15)}}
+/* send */
+textarea.plain{width:100%;min-height:96px;resize:none;border-radius:20px;padding:16px 18px;background:rgba(0,0,0,.18);border:1px solid var(--line)}
+.label{color:var(--muted);font-size:15px;margin:16px 0 10px}
+.seg{display:flex;background:rgba(0,0,0,.22);border-radius:18px;padding:5px;gap:4px}
+.seg button{flex:1;height:44px;border-radius:14px;font-weight:600;color:#fff;white-space:nowrap;font-size:15px;padding:0 4px}
+.seg button.on{background:#fff;color:var(--ink)}
+.hint{color:var(--muted);font-size:14px;margin-top:10px}
+.pills{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.pills button{height:40px;padding:0 15px;border-radius:20px;border:1px solid var(--line);font-weight:600;white-space:nowrap}
+#inputs button{height:48px;padding:0 4px;border-radius:16px;font-size:16px}
+#secs{flex-wrap:nowrap;gap:7px}#secs button{padding:0 12px;height:38px}#secs .label{white-space:nowrap}
+.pills button.on{background:#fff;color:var(--ink);border-color:#fff}
+.primary{width:100%;height:56px;border-radius:20px;background:var(--accent);color:var(--ink);font-weight:700;font-size:18px;display:flex;align-items:center;justify-content:center;gap:10px;margin-top:16px}
+.share{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.share button{height:96px;border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-weight:600}
+.row{display:flex;gap:10px;align-items:center}
+.ghost{height:52px;padding:0 18px;border-radius:18px;font-weight:600;display:flex;align-items:center;gap:8px}
+/* apps */
+.apps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 8px}
+.app{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:13px;color:#fff;text-align:center}
+.app .ic{width:62px;height:62px;border-radius:20px;display:grid;place-items:center;overflow:hidden;border:1px solid var(--line);background:var(--glass2);box-shadow:inset 0 1px 0 var(--hi)}
+.app img{width:44px;height:44px;object-fit:contain}
+.app span{max-width:76px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.net{display:flex;align-items:center;gap:14px}
+.net .ic{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:rgba(255,255,255,.1)}
+.net>div:nth-child(2){flex:1;min-width:0}.net b,.net small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.net b{display:block;font-size:16px}.net small{display:block;color:var(--muted);font-size:13.5px;margin-top:2px}
+.test{margin-left:auto;flex:none;height:48px;padding:0 14px;border-radius:16px;background:var(--accent);color:var(--ink);font-weight:700;display:flex;align-items:center;gap:8px}
+.toggle{display:flex;align-items:center;gap:14px;padding:6px 0}
+.toggle+.toggle{border-top:1px solid rgba(255,255,255,.1);padding-top:14px;margin-top:8px}
+.toggle b{display:block;font-size:17px}.toggle small{color:var(--muted);font-size:13.5px}
+.sw{margin-left:auto;width:58px;height:34px;border-radius:17px;background:rgba(255,255,255,.18);position:relative;flex:none;transition:.2s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:28px;height:28px;border-radius:50%;background:#fff;transition:.2s}
+.sw.on{background:var(--accent)}.sw.on::after{left:27px}
+/* tabbar */
+nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom));width:min(440px,calc(100% - 28px));height:72px;border-radius:30px;display:flex;padding:6px;z-index:5}
+nav button{flex:1;border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:13px;font-weight:600;color:#fff}
+nav button.on{background:rgba(255,255,255,.12);color:var(--accent)}
+.tab{display:none}.tab.on{display:block}
+/* pair */
+#pair{display:none;text-align:center;padding-top:9vh}
+#pair .pin{display:flex;gap:8px;justify-content:center;margin:26px 0 8px}
+#pair input{width:100%;height:64px;border-radius:20px;text-align:center;font-size:30px;letter-spacing:.35em;color:#fff;background:rgba(0,0,0,.2);border:1px solid var(--line);outline:0}
+.err{color:#FCA5A5;min-height:22px;margin-top:10px;font-size:15px}
+.toast{text-align:center;position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top));transform:translate(-50%,-140%);padding:12px 18px;border-radius:18px;transition:.3s;z-index:9;font-weight:600;max-width:90%}
+.toast{visibility:hidden}.toast.show{transform:translate(-50%,0);visibility:visible}
+.small{font-size:13.5px;color:var(--dim)}
+</style>
+</head>
+<body>
+<svg class="sky" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0 150 L60 110 L120 140 L190 80 L260 130 L320 95 L400 125 L400 300 L0 300Z" fill="#2A3462" opacity=".55"/>
+  <path d="M0 200 L80 170 L150 205 L230 165 L310 200 L400 175 L400 300 L0 300Z" fill="#1B2548" opacity=".8"/>
+  <path d="M0 250 L90 225 L180 255 L270 228 L400 250 L400 300 L0 300Z" fill="#111A34"/>
+</svg>
+
+<main>
+  <!-- Pairing -->
+  <section id="pair">
+    <div class="round" style="margin:0 auto;width:72px;height:72px"><svg viewBox="0 0 24 24"><path d="M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z M12 18h.01"/></svg></div>
+    <h1 style="margin-top:20px">Pair with your TV</h1>
+    <p style="color:var(--muted);text-align:center;margin:6px 8px 0">On the TV, press the remote's settings button, then open <b>Phone · Show PIN</b></p>
+    <div class="card glass" style="text-align:left">
+      <input id="pin" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="••••••">
+      <button class="primary" id="pairBtn">Pair this phone</button>
+      <div class="err" id="pairErr"></div>
+      <p class="small">Works only on your home Wi-Fi. After 5 wrong PINs the TV locks pairing for 5 minutes.</p>
+    </div>
+  </section>
+
+  <!-- Remote -->
+  <section class="tab on" id="t-remote">
+    <div class="head">
+      <div><h1 class="tvname">Glass TV</h1><div class="sub"><span class="dot" id="dot"></span><span id="conn">Connected · PIN protected</span></div></div>
+      <button class="round" data-key="power" aria-label="Power"><svg viewBox="0 0 24 24"><path d="M12 2v10 M18.4 6.6a9 9 0 1 1-12.77.04"/></svg></button>
+    </div>
+    <p class="eyebrow" style="margin-top:22px">Type on TV</p>
+    <div class="field glass">
+      <svg viewBox="0 0 24 24"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z M6 8h.01 M10 8h.01 M14 8h.01 M18 8h.01 M8 12h.01 M12 12h.01 M16 12h.01 M7 16h10"/></svg>
+      <input id="type" placeholder="Search or type into the TV" enterkeyhint="search" autocomplete="off" autocorrect="off">
+    </div>
+    <div class="dpad">
+      <button class="u" data-key="up" aria-label="Up"><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>
+      <button class="l" data-key="left" aria-label="Left"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <button class="ok" data-key="ok">OK</button>
+      <button class="r" data-key="right" aria-label="Right"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+      <button class="d" data-key="down" aria-label="Down"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+    </div>
+    <div class="trio">
+      <div><button class="round" data-key="back" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5 M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>Back</div>
+      <div><button class="round" data-key="home" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8 M3 10a2 2 0 0 1 .7-1.5l7-6a2 2 0 0 1 2.6 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></button>Home</div>
+      <div><button class="round" data-key="settings" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/></svg></button>Settings</div>
+    </div>
+    <div class="vol">
+      <div class="volbar glass">
+        <button data-key="voldown" aria-label="Volume down"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
+        <button class="mid" data-key="mute" aria-label="Mute"><svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4z M15.5 8.5a5 5 0 0 1 0 7 M19 5a10 10 0 0 1 0 14"/></svg></button>
+        <button data-key="volup" aria-label="Volume up"><svg viewBox="0 0 24 24"><path d="M12 5v14 M5 12h14"/></svg></button>
+      </div>
+      <div class="mic"><button id="mic" aria-label="Voice search"><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z M19 10v2a7 7 0 0 1-14 0v-2 M12 19v3"/></svg></button><span id="micLabel">Hold to talk</span></div>
+    </div>
+  </section>
+
+  <!-- Send -->
+  <section class="tab" id="t-send">
+    <h1>Send to TV</h1><div class="sub"><span class="dot"></span><span class="tvname">Glass TV</span> · Connected</div>
+    <div class="card glass">
+      <p class="eyebrow">Message</p>
+      <textarea class="plain" id="msg" maxlength="280" placeholder="Dinner is ready, come down"></textarea>
+      <div class="label">Show as</div>
+      <div class="seg" id="mode"><button class="on" data-v="popup">Pop-up</button><button data-v="fullscreen">Full screen</button><button data-v="note">Sticky note</button></div>
+      <div class="hint" id="modeHint">Pops up at the top of the TV, then fades away.</div>
+      <div class="pills" style="margin-top:14px" id="secs"><span class="label" style="margin:0 6px 0 0">Show for</span><button data-v="5">5 sec</button><button class="on" data-v="10">10 sec</button><button data-v="30">30 sec</button></div>
+      <button class="primary" id="sendMsg"><svg viewBox="0 0 24 24"><path d="M22 2L11 13 M22 2l-7 20-4-9-9-4z"/></svg>Send to TV</button>
+      <button class="ghost" id="clearNote" style="display:none;margin:10px auto 0;color:var(--muted)">Clear sticky note</button>
+    </div>
+    <div class="card glass">
+      <p class="eyebrow">Share to TV</p>
+      <div class="share">
+        <button class="glass" id="sPhoto"><svg viewBox="0 0 24 24"><path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z M11 9a2 2 0 1 1-4 0a2 2 0 1 1 4 0z M21 15l-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></svg>Photo</button>
+        <button class="glass" id="sVideo"><svg viewBox="0 0 24 24"><path d="M6 5h12a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V9a4 4 0 0 1 4-4z M10 9l5 3-5 3z"/></svg>Video link</button>
+        <button class="glass" id="sWeb"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71 M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Web page</button>
+      </div>
+      <input type="file" id="photoFile" accept="image/*" hidden>
+      <button class="ghost" id="clearPhotos" style="margin:10px auto 0;color:var(--muted)">Clear photos on TV</button>
+      <div class="field glass" id="linkBox" style="display:none;margin-top:12px"><input id="link" type="url" placeholder="https://"><button class="ghost" id="linkGo" style="height:40px;background:var(--accent);color:var(--ink)">Open</button></div>
+    </div>
+    <div class="card glass">
+      <p class="eyebrow">Install an app</p>
+      <div class="row"><div class="field glass" style="flex:1;height:52px"><input id="apk" type="url" placeholder="Paste an APK link"></div>
+      <button class="ghost glass" id="install"><svg viewBox="0 0 24 24"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg>Install</button></div>
+      <p class="small" style="margin:10px 2px 0">https:// links only. You confirm the install on the TV with the remote.</p>
+    </div>
+  </section>
+
+  <!-- Apps -->
+  <section class="tab" id="t-apps">
+    <h1>Apps &amp; status</h1><div class="sub"><span class="dot"></span><span class="tvname">Glass TV</span> · Connected</div>
+    <div class="card glass"><p class="eyebrow">Open on TV</p><div class="apps" id="apps"></div></div>
+    <div class="card glass" id="inputCard"><p class="eyebrow">Input</p><div class="pills" id="inputs" style="display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:8px"></div><p class="small" style="margin:10px 2px 0">Hold an input to rename it (for example "PlayStation").</p></div>
+    <div class="card glass"><p class="eyebrow">Network</p>
+      <div class="net"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 20h.01 M2 8.82a15 15 0 0 1 20 0 M5 12.86a10 10 0 0 1 14 0 M8.5 16.43a5 5 0 0 1 7 0"/></svg></div>
+        <div><b id="wq">Wi-Fi</b><small id="wd"></small></div>
+        <button class="test" id="speed"><svg viewBox="0 0 24 24"><path d="M12 14l4-4 M3.34 19a10 10 0 1 1 17.32 0"/></svg><span>Test</span></button></div>
+    </div>
+    <div class="card glass">
+      <div class="toggle"><svg viewBox="0 0 24 24" style="color:#5EE29A"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z M9 12l2 2 4-4"/></svg>
+        <div><b>Auto-repair</b><small id="repSub">Re-checks after every TV update</small></div><button class="sw" data-t="autorepair" aria-label="Auto-repair"></button></div>
+      <div class="toggle"><svg viewBox="0 0 24 24"><path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z M11 9a2 2 0 1 1-4 0a2 2 0 1 1 4 0z M21 15l-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></svg>
+        <div><b>Ambient mode</b><small>Photos, time and news when idle</small></div><button class="sw" data-t="ambient" aria-label="Ambient mode"></button></div>
+    </div>
+    <div class="card glass" id="fixCard" style="display:none"><p class="eyebrow">Fix from the phone</p><div id="fixes"></div>
+      <p class="small" style="margin:10px 2px 0">Each button opens the right page on the TV. Finish it there with the remote.</p></div>
+    <div class="card glass"><p class="eyebrow">Theme</p><div class="pills" id="themes"></div></div>
+    <div class="card glass"><p class="eyebrow">Weather &amp; headlines</p>
+      <div class="field glass" style="height:52px"><input id="place" placeholder="Weather city"><button class="ghost" id="placeGo" style="height:40px">Set</button></div>
+      <div class="field glass" style="height:52px;margin-top:10px"><input id="news" type="url" placeholder="Headlines RSS (https://…)"><button class="ghost" id="newsGo" style="height:40px">Set</button></div>
+      <p class="small" style="margin:10px 2px 0">Weather is the TV's only routine internet call (one HTTPS GET). Headlines stay off until you add a feed.</p>
+    </div>
+    <button class="ghost glass" id="learn" style="margin:18px auto 0">Teach the settings button</button>
+    <p class="small" style="text-align:center;margin:8px 0 0">If the remote's gear button doesn't open Control Center, tap this, then press the gear within 20 seconds.</p>
+    <button class="ghost" id="forget" style="margin:18px auto 0;color:var(--muted)">Unpair this phone</button>
+  </section>
+</main>
+
+<nav class="glass">
+  <button class="on" data-tab="remote"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="5"/><circle cx="12" cy="8" r="2"/><path d="M12 14h.01 M12 17h.01"/></svg>Remote</button>
+  <button data-tab="send"><svg viewBox="0 0 24 24"><path d="M22 2L11 13 M22 2l-7 20-4-9-9-4z"/></svg>Send</button>
+  <button data-tab="apps"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>Apps</button>
+</nav>
+<div class="toast glass" id="toast"></div>
+
+<script>
+"use strict";
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+let token = null; try { token = localStorage.getItem("glassToken"); } catch (e) {}
+let status = null;
+
+function toast(t) { const el = $("#toast"); el.textContent = t; el.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove("show"), 2200); }
+function buzz() { if (navigator.vibrate) navigator.vibrate(12); }
+
+async function api(path, body, raw) {
+  const opt = { method: body === undefined ? "GET" : "POST", headers: { "X-Glass-Token": token || "" } };
+  if (raw) { opt.body = raw.blob; opt.headers["Content-Type"] = raw.type; }
+  else if (body !== undefined) { opt.body = JSON.stringify(body); opt.headers["Content-Type"] = "application/json"; }
+  const r = await fetch(path, opt);
+  if (r.status === 401 && path !== "/api/pair") { forget(); throw new Error("Not paired"); }
+  const ct = r.headers.get("content-type") || "";
+  const j = ct.includes("json") ? await r.json() : null;
+  if (!r.ok) throw new Error((j && j.error) || ("HTTP " + r.status));
+  return j;
+}
+
+function showPair(on) { $("#pair").style.display = on ? "block" : "none"; $$(".tab").forEach(t => t.style.display = on ? "none" : ""); document.querySelector("nav").style.display = on ? "none" : "flex"; }
+function forget() { token = null; try { localStorage.removeItem("glassToken"); } catch (e) {} showPair(true); }
+
+$("#pairBtn").onclick = async () => {
+  $("#pairErr").textContent = "";
+  const ua = navigator.userAgent, name = /iPhone/.test(ua) ? "iPhone" : /iPad/.test(ua) ? "iPad" : /Android/.test(ua) ? "Android phone" : /Mac/.test(ua) ? "Mac" : "Phone";
+  try {
+    const r = await fetch("/api/pair", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ pin: $("#pin").value, name }) });
+    const j = await r.json();
+    if (!j.ok) { $("#pairErr").textContent = j.error || "Could not pair"; return; }
+    token = j.token; try { localStorage.setItem("glassToken", token); } catch (e) {}
+    showPair(false); refresh(); toast("Paired");
+  } catch (e) { $("#pairErr").textContent = "Can't reach the TV. Are you on the home Wi-Fi?"; }
+};
+
+// tabs
+$$("nav button").forEach(b => b.onclick = () => {
+  $$("nav button").forEach(x => x.classList.toggle("on", x === b));
+  $$(".tab").forEach(t => t.classList.toggle("on", t.id === "t-" + b.dataset.tab));
+  if (b.dataset.tab === "apps") refresh();
+});
+
+// keys
+$$("[data-key]").forEach(b => b.addEventListener("click", async () => {
+  buzz();
+  try { const r = await api("/api/key", { key: b.dataset.key }); if (r.sent === "not-ready") toast("Glass key service is off on the TV"); else if (r.sent === "no-focus") toast("This app (like YouTube) ignores phone arrows. Use Search here, or the Google TV / YouTube phone app"); }
+  catch (e) { toast(e.message); }
+}));
+// hold arrows / volume to repeat
+$$(".dpad [data-key]:not(.ok), .volbar [data-key]:not(.mid)").forEach(b => {
+  let t; const go = () => { t = setInterval(() => api("/api/key", { key: b.dataset.key }).catch(() => {}), 180); };
+  b.addEventListener("touchstart", () => { t = setTimeout(go, 450); }, { passive: true });
+  ["touchend", "touchcancel"].forEach(ev => b.addEventListener(ev, () => { clearTimeout(t); clearInterval(t); }));
+});
+
+// typing: mirror the phone field into the TV's focused field
+let typeTimer;
+$("#type").addEventListener("input", e => { clearTimeout(typeTimer); typeTimer = setTimeout(() => api("/api/text", { text: e.target.value }).catch(() => {}), 220); });
+$("#type").addEventListener("keydown", async e => {
+  if (e.key !== "Enter") return; e.preventDefault();
+  const r = await api("/api/text", { text: e.target.value, submit: true }).catch(err => toast(err.message));
+  if (r) toast(r.where === "field" ? "Sent" : r.where === "no-field" ? "Nothing to type into on the TV" : "Searching on TV");
+  e.target.value = "";
+});
+
+// voice: the browser's speech-to-text when allowed; otherwise the keyboard's own mic
+$("#mic").onclick = () => {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR || !window.isSecureContext) { const f = $("#type"); f.focus(); toast("Tap the mic on your keyboard, then Search"); return; }
+  const r = new SR(); r.lang = navigator.language || "en-US"; r.interimResults = false;
+  $("#mic").classList.add("live"); $("#micLabel").textContent = "Listening…";
+  r.onresult = ev => { const t = ev.results[0][0].transcript; api("/api/text", { text: t, submit: true }).then(() => toast("“" + t + "”")); };
+  r.onend = () => { $("#mic").classList.remove("live"); $("#micLabel").textContent = "Hold to talk"; };
+  r.onerror = () => toast("Voice not available here");
+  r.start();
+};
+
+// send
+const hints = { popup: "Pops up at the top of the TV, then fades away.", fullscreen: "Fills the TV screen until a button is pressed.", note: "Pinned on Home and in Ambient mode until you clear it." };
+let mode = "popup", secs = 10;
+$$("#mode button").forEach(b => b.onclick = () => { mode = b.dataset.v; $$("#mode button").forEach(x => x.classList.toggle("on", x === b)); $("#modeHint").textContent = hints[mode]; });
+$$("#secs button").forEach(b => b.onclick = () => { secs = +b.dataset.v; $$("#secs button").forEach(x => x.classList.toggle("on", x === b)); });
+$("#sendMsg").onclick = async () => {
+  const t = $("#msg").value.trim(); if (!t) { toast("Write a message first"); return; }
+  try { await api("/api/message", { text: t, mode, seconds: secs }); toast("Sent to TV"); buzz(); if (mode === "note") $("#clearNote").style.display = "flex"; } catch (e) { toast(e.message); }
+};
+$("#clearNote").onclick = async () => { await api("/api/note/clear", {}).catch(() => {}); $("#clearNote").style.display = "none"; toast("Note cleared"); };
+
+$("#sPhoto").onclick = () => $("#photoFile").click();
+$("#clearPhotos").onclick = async () => { await api("/api/photos/clear", {}).then(() => toast("Photos cleared")).catch(e => toast(e.message)); };
+$("#photoFile").onchange = async e => {
+  const f = e.target.files[0]; if (!f) return;
+  toast("Sending photo…");
+  try {
+    const img = await createImageBitmap(f); const s = Math.min(1, 1920 / Math.max(img.width, img.height));
+    const c = document.createElement("canvas"); c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+    c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+    const blob = await new Promise(r => c.toBlob(r, "image/jpeg", 0.88));
+    await api("/api/photo", null, { blob, type: "image/jpeg" }); toast("Photo on TV");
+  } catch (err) { toast(err.message || "Could not send photo"); }
+  e.target.value = "";
+};
+let linkKind = "web";
+$("#sVideo").onclick = () => { linkKind = "video"; $("#linkBox").style.display = "flex"; $("#link").placeholder = "YouTube or video link"; $("#link").focus(); };
+$("#sWeb").onclick = () => { linkKind = "web"; $("#linkBox").style.display = "flex"; $("#link").placeholder = "https://"; $("#link").focus(); };
+$("#linkGo").onclick = async () => { try { await api("/api/open", { url: $("#link").value.trim() }); toast("Opening on TV"); $("#link").value = ""; } catch (e) { toast(e.message); } };
+$("#install").onclick = async () => {
+  const u = $("#apk").value.trim(); if (!u.startsWith("https://")) { toast("Use an https:// link"); return; }
+  try { const r = await api("/api/install", { url: u }); toast(r.note || "Check the TV"); } catch (e) { toast(e.message); }
+};
+
+// apps tab
+const iconCache = {};
+async function icon(pkg) {
+  if (iconCache[pkg]) return iconCache[pkg];
+  const r = await fetch("/api/icon?pkg=" + encodeURIComponent(pkg), { headers: { "X-Glass-Token": token } });
+  return iconCache[pkg] = URL.createObjectURL(await r.blob());
+}
+let showAll = false;
+function renderApps() {
+  const box = $("#apps"); box.textContent = "";
+  const list = status.apps.slice(0, showAll ? 99 : 7);
+  for (const a of list) {
+    const b = document.createElement("button"); b.className = "app";
+    const ic = document.createElement("div"); ic.className = "ic"; const im = document.createElement("img"); im.alt = ""; ic.appendChild(im);
+    const sp = document.createElement("span"); sp.textContent = a.label;
+    b.append(ic, sp); b.onclick = () => { buzz(); api("/api/launch", { pkg: a.pkg }).then(() => toast("Opening " + a.label)).catch(e => toast(e.message)); };
+    icon(a.pkg).then(u => im.src = u).catch(() => {});
+    box.appendChild(b);
+  }
+  if (!showAll && status.apps.length > 7) {
+    const b = document.createElement("button"); b.className = "app";
+    b.innerHTML = '<div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg></div><span>All apps</span>';
+    b.onclick = () => { showAll = true; renderApps(); }; box.appendChild(b);
+  }
+}
+function render() {
+  const s = status;
+  $("#conn").textContent = s.remote.ready ? "Connected · PIN protected" : "Connected · Glass key service is off";
+  $("#dot").classList.toggle("off", !s.remote.ready);
+  renderApps();
+  const ins = $("#inputs"); ins.textContent = "";
+  $$(".tvname").forEach(el => el.textContent = s.name);
+  $("#inputCard").style.display = s.inputs.length ? "block" : "none";   // brands without TV inputs: hide the row
+  [{ key: "home", label: "Home" }].concat(s.inputs).forEach((i, k) => {
+    const b = document.createElement("button"); b.textContent = i.label; if (k === 0) b.className = "on";
+    let held = false, ht;
+    b.onclick = () => { if (held) { held = false; return; } $$("#inputs button").forEach(x => x.classList.toggle("on", x === b)); api("/api/input", { key: i.key }).catch(e => toast(e.message)); };
+    if (k > 0) {   // hold to rename (Home can't be renamed)
+      const down = () => { ht = setTimeout(async () => { held = true; const n = prompt("New name for " + i.label + " (empty = " + i.name + ")", i.label === i.name ? "" : i.label);
+        if (n !== null) { await api("/api/input/rename", { key: i.key, label: n.trim() }).catch(e => toast(e.message)); refresh(); } }, 600); };
+      const up = () => clearTimeout(ht);
+      b.addEventListener("touchstart", down, { passive: true }); b.addEventListener("touchend", up); b.addEventListener("mousedown", down); b.addEventListener("mouseup", up);
+      b.addEventListener("contextmenu", e => e.preventDefault());
+    }
+    ins.appendChild(b);
+  });
+  $("#wq").textContent = "Wi-Fi · " + s.wifi.quality; $("#wd").textContent = [s.wifi.band, s.wifi.ip].filter(Boolean).join(" · ");
+  $$(".sw").forEach(b => b.classList.toggle("on", !!s.toggles[b.dataset.t]));
+  $("#repSub").textContent = s.toggles.autorepair && !s.repair.ok ? "TV updated: fix it below" : "Re-checks after every TV update";
+  const fx = $("#fixes"); fx.textContent = "";
+  const items = s.repair.fixes.slice(); if (s.adb) items.push({ action: "adb", label: "ADB (port 5555) is open", hint: "Opens Developer options: switch USB debugging off" });
+  items.forEach(f => { const r = document.createElement("div"); r.className = "toggle";
+    const t = document.createElement("div"); const bb = document.createElement("b"); bb.textContent = f.label; const sm = document.createElement("small"); sm.textContent = f.hint; t.append(bb, sm);
+    const go = document.createElement("button"); go.className = "ghost"; go.style.height = "40px"; go.textContent = f.action === "mac" ? "Mac" : f.action === "ack" ? "Done" : "Open";
+    go.disabled = f.action === "mac";
+    go.onclick = () => api("/api/repair", { action: f.action, pkg: f.pkg || "" }).then(() => { toast(f.action === "ack" ? "Marked as checked" : "Opened on the TV"); setTimeout(refresh, 1500); }).catch(e => toast(e.message));
+    r.append(t, go); fx.appendChild(r); });
+  $("#fixCard").style.display = items.length ? "block" : "none";
+  const th = $("#themes"); th.textContent = "";
+  s.themes.forEach(n => { const b = document.createElement("button"); b.textContent = n[0].toUpperCase() + n.slice(1); if (n === s.theme) b.className = "on";
+    b.onclick = () => api("/api/theme", { name: n }).then(refresh); th.appendChild(b); });
+  $("#place").placeholder = s.weather.place ? "Weather city (now " + s.weather.place + ")" : "Weather city (not set yet)";
+  if (!s.weather.place && !render.askedCity) { render.askedCity = true; toast("Set your weather city in Apps → Weather"); }
+  $("#news").value = s.news || "";
+  $("#clearNote").style.display = s.note ? "flex" : "none";
+}
+async function refresh() { try { status = (await api("/api/status")); render(); } catch (e) { if (token) toast(e.message); } }
+
+$$(".sw").forEach(b => b.onclick = async () => { const on = !b.classList.contains("on"); b.classList.toggle("on", on); await api("/api/toggle", { name: b.dataset.t, on }).catch(e => toast(e.message)); });
+$("#speed").onclick = async () => { const sp = $("#speed span"); sp.textContent = "Testing…"; try { const r = await api("/api/speedtest", {}); sp.textContent = r.mbps + " Mbps"; } catch (e) { sp.textContent = "Test"; toast(e.message); } };
+$("#placeGo").onclick = async () => { const r = await api("/api/weather", { place: $("#place").value }).catch(e => toast(e.message)); if (r) { toast(r.place ? "Weather: " + r.place : "Place not found"); refresh(); } };
+$("#newsGo").onclick = async () => { await api("/api/news", { url: $("#news").value.trim() }).then(() => toast("Headlines set")).catch(e => toast("Use an https:// feed")); };
+$("#learn").onclick = () => api("/api/learn-settings-key", {}).then(() => toast("Now press the gear on the TV remote")).catch(e => toast(e.message));
+$("#forget").onclick = async () => { await api("/api/unpair", {}).catch(() => {}); forget(); toast("This phone is unpaired"); };
+
+if (token) { showPair(false); refresh(); } else showPair(true);
+</script>
+</body>
+</html>

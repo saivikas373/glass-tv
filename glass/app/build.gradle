@@ -1,0 +1,36 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+// Release signing: the keystore lives OUTSIDE this repo (~/glass-release-key/), its password in the macOS
+// Keychain. build-release.sh reads it from the Keychain and passes it in these environment variables.
+def ks = System.getenv('GLASS_KEYSTORE') ?: "${System.getProperty('user.home')}/glass-release-key/glass-release.jks"
+android {
+    namespace 'tv.glass.launcher'
+    compileSdk 34
+    defaultConfig {
+        applicationId 'tv.glass.launcher'
+        minSdk 28          // Android 9 and newer (Android TV and Google TV)
+        targetSdk 34
+        versionCode 100
+        versionName '1.0.0'
+    }
+    signingConfigs {
+        release {
+            storeFile file(ks)
+            storePassword System.getenv('GLASS_KEYSTORE_PASSWORD')
+            keyAlias 'glass'
+            keyPassword System.getenv('GLASS_KEYSTORE_PASSWORD')
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig System.getenv('GLASS_KEYSTORE_PASSWORD') ? signingConfigs.release : null
+        }
+    }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+    kotlinOptions { jvmTarget = '17' }
+    lint { abortOnError false; checkReleaseBuilds false }
+}
+dependencies { }

@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Glass</string>
+    <string name="a11y_desc">Glass: makes the Home button open Glass (hold Home for the TV\'s own home), opens Control Center from the remote\'s settings button, shows phone messages over any app, and types text sent from your phone. Glass reads nothing on screen except the text field you type into.</string>
+    <string name="dream_name">Glass Ambient</string>
+</resources>
