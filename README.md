@@ -59,3 +59,12 @@ Not affiliated with Google, Apple or any TV maker.
 
 - **Finding Glass:** in Accessibility, Glass is at the very bottom of the Services list. Keep pressing Down.
 - **The scary warning:** Android shows "Glass can collect all of the text you type" for every accessibility app. Glass uses this only to catch the Home and settings buttons and to type what you send from your phone. It has no account and sends nothing to the internet except the weather you ask for.
+
+## TCL TVs: use the computer setup if you can
+
+TCL blocks apps from starting by themselves after a full restart, and only the computer setup can allow it. With the TV-only setup on a TCL, Glass still works, but after a restart you get the normal Google TV home until you fix it:
+
+1. Open Glass from your apps. The phone remote comes back.
+2. Go to Settings → Accessibility → Glass, turn it off, then on again. The Home button comes back.
+
+Normal standby doesn't cause this, only a full restart (for example a power cut or a TV update). Other brands may do the same; this has only been tested on one TCL TV.
