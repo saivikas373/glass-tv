@@ -1,3 +1,5 @@
+# [📄 Read the setup guide first](docs/Glass-TV-Setup-Guide.pdf)
+
 # Glass TV
 
 A calm, ad-free home screen for **Android TV and Google TV** (Android 9 and newer), with a phone remote that only answers devices on your own Wi-Fi.
@@ -20,7 +22,7 @@ Downloads are on the [latest release](https://github.com/saivikas373/glass-tv/re
 
 ### Easy path (TV only)
 1. On the TV, install **Downloader** from the Play Store.
-2. Open Downloader and enter the link to `Glass.apk` from the release page.
+2. Open Downloader and enter `tinyurl.com/glasstv-version`.
 3. Open Glass and follow its setup screen: **Turn on Glass**, **Show what's playing**, **Pick a look**, **Done: press Home**.
 
 If step 1 of the setup says *"Your TV blocked this"* (common on Android 13+ for apps installed with Downloader), use the Full path.
